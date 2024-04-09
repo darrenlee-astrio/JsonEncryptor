@@ -18,11 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
+    <ProjectReference Include="..\..\src\Application\Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\" />
+    <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>
