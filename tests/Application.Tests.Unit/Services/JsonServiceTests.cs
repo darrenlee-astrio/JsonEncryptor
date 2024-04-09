@@ -1,24 +1,25 @@
-﻿using Application.Helpers;
+﻿using Application.Services.Json;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Application.Tests.Unit.Helpers;
+namespace Application.Tests.Unit.Services;
 
-public class JsonHelperTests
+public class JsonServiceTests
 {
+    private readonly JsonService _jsonService;
+    public JsonServiceTests()
+    {
+        _jsonService = new JsonService();
+    }
+
     [Theory]
     [InlineData(@"{""name"":""John"",""age"":30,""city"":""New York""}")]
     [InlineData(@"[{""name"":""John"",""age"":30,""city"":""New York""}]")]
-    public void IsValidJson_ReturnsTrue_WhenInputIsValid(string input)
+    public void IsJsonValid_ReturnsTrue_WhenInputIsValid(string input)
     {
         // Arrange
 
         // Act
-        var result = JsonHelper.IsValidJson(input);
+        var result = _jsonService.IsJsonValid(input);
 
         // Assert
         result.Should().BeTrue();
@@ -27,12 +28,12 @@ public class JsonHelperTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void IsValidJson_ShouldReturnFalse_WhenValueIsNullOrEmpty(string? value)
+    public void IsJsonValid_ShouldReturnFalse_WhenValueIsNullOrEmpty(string? value)
     {
         // Act
 
         // Arrange
-        var result = JsonHelper.IsValidJson(value!);
+        var result = _jsonService.IsJsonValid(value!);
 
         // Assert
         result.Should().BeFalse();
@@ -46,17 +47,17 @@ public class JsonHelperTests
     [InlineData(@"""name"":""John"",""age"":30,""city"":""New York""}")]
     [InlineData(@"[{""name"":""John"",""age"":30,""city"":""New York""}")]
     [InlineData(@"{""name"":""John"",""age"":30,""city"":""New York""}]")]
-    public void IsValidJson_ReturnsFalse_WhenInputIsInvalid(string input)
+    public void IsJsonValid_ReturnsFalse_WhenInputIsInvalid(string input)
     {
         // Arrange
 
         // Act
-        var result = JsonHelper.IsValidJson(input);
+        var result = _jsonService.IsJsonValid(input);
 
         // Assert
         result.Should().BeFalse();
     }
-    
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -65,7 +66,7 @@ public class JsonHelperTests
         // Arrange
 
         // Act
-        string result = JsonHelper.PrettifyJson(input!);
+        string result = _jsonService.PrettifyJson(input!);
 
         // Assert
         result.Should().BeEmpty();
@@ -81,7 +82,7 @@ public class JsonHelperTests
         // Arrange
 
         // Act
-        string result = JsonHelper.PrettifyJson(input);
+        string result = _jsonService.PrettifyJson(input);
 
         // Assert
         result.Should().Be(expected);
