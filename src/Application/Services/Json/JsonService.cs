@@ -1,6 +1,9 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Application.Services.Abstractions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Application.Services.Json;
 
@@ -20,16 +23,18 @@ public class JsonService : IJsonService
 
         input = input.Trim();
 
-        if (input.StartsWith("{") && input.EndsWith("}") ||   // For objects
-            input.StartsWith("[") && input.EndsWith("]"))     // For array
+        if ((input.StartsWith("{") && input.EndsWith("}")) || // For objects
+            (input.StartsWith("[") && input.EndsWith("]")))   // For arrays
         {
             try
             {
-                var _ = JsonNode.Parse(input);
+                // Attempt to parse the input as a JToken
+                JToken.Parse(input);
                 return true;
             }
-            catch (FormatException)
+            catch (JsonReaderException)
             {
+                // JSON parsing error
                 return false;
             }
         }
@@ -42,18 +47,54 @@ public class JsonService : IJsonService
     /// </summary>
     /// <param name="input">The JSON string to prettify. If the string is null or empty, the method returns an empty string.</param>
     /// <returns>A prettified JSON string with indented formatting. If the input is null or empty, returns an empty string.</returns>
-    public string PrettifyJson(string input)
+    public string PrettifyJson(string json)
     {
-        if (string.IsNullOrEmpty(input))
+        if (string.IsNullOrEmpty(json))
         {
             return string.Empty;
         }
 
-        JsonElement jsonElement = JsonDocument.Parse(input).RootElement;
-
-        return JsonSerializer.Serialize(jsonElement, new JsonSerializerOptions
+        if (IsJsonValid(json) is false)
         {
-            WriteIndented = true
-        });
+            return json;
+        }
+
+        string value = json.Trim();
+
+        if (value.StartsWith("{") && value.EndsWith("}"))
+        {
+            return JObject.Parse(json)
+                          .ToString(Formatting.Indented);
+        }
+        else if (value.StartsWith("[") && value.EndsWith("]"))
+        {
+            return JArray.Parse(json)
+                         .ToString(Formatting.Indented);
+        }
+
+        return json;
+
+    }
+
+    public string? ReplaceValue(string json, string key, string newValue, Formatting formatting = Formatting.Indented)
+    {
+        if (string.IsNullOrEmpty(json))
+        {
+            return string.Empty;
+        }
+
+        JObject jObject = JObject.Parse(json);
+        JToken? token = jObject.SelectToken($"$..{key}");
+
+        if (token != null)
+        {
+            token.Replace(newValue);
+
+            return jObject.ToString(formatting);
+        }
+        else
+        {
+            return json;
+        }
     }
 }

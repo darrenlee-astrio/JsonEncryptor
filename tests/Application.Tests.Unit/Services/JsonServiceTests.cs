@@ -73,6 +73,25 @@ public class JsonServiceTests
     }
 
     [Theory]
+    [InlineData(" ")]
+    [InlineData("invalid json")]
+    [InlineData("{name: 'John', age: 30")]
+    [InlineData(@"{""name"":""John"",""age"":30,""city"":""New York""")]
+    [InlineData(@"""name"":""John"",""age"":30,""city"":""New York""}")]
+    [InlineData(@"[{""name"":""John"",""age"":30,""city"":""New York""}")]
+    [InlineData(@"{""name"":""John"",""age"":30,""city"":""New York""}]")]
+    public void PrettifyJson_ReturnsOriginalJson_WhenInputIsInvalidJson(string? input)
+    {
+        // Arrange
+
+        // Act
+        string result = _jsonService.PrettifyJson(input!);
+
+        // Assert
+        result.Should().Be(input);
+    }
+
+    [Theory]
     [InlineData("{\"name\":\"John\",\"age\":30,\"city\":\"New York\"}", "{\r\n  \"name\": \"John\",\r\n  \"age\": 30,\r\n  \"city\": \"New York\"\r\n}")]
     [InlineData("[1, 2, 3]", "[\r\n  1,\r\n  2,\r\n  3\r\n]")]
     [InlineData("true", "true")]
@@ -86,5 +105,51 @@ public class JsonServiceTests
 
         // Assert
         result.Should().Be(expected);
+    }
+
+    [Fact]
+    public void ReplaceValue_ShouldReturnModifiedJson_WhenKeyExists()
+    {
+        // Arrange
+        string json = "{\"name\": \"John\", \"age\": 30}";
+        string key = "age";
+        string newValue = "35";
+
+        // Act
+        string result = _jsonService.ReplaceValue(json, key, newValue)!;
+
+        // Assert
+        result.Should().Be("{\r\n  \"name\": \"John\",\r\n  \"age\": \"35\"\r\n}");
+    }
+
+    [Fact]
+    public void ReplaceValue_ShouldReturnOriginalJson_WhenKeyDoesNotExist()
+    {
+        // Arrange
+        string json = "{\"name\": \"John\", \"age\": 30}";
+        string key = "address";
+        string newValue = "123 Main St";
+
+        // Act
+        string result = _jsonService.ReplaceValue(json, key, newValue)!;
+
+        // Assert
+        result.Should().Be(json);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void ReplaceValue_ShouldReturnEmptyString_WhenJsonIsNullOrEmpty(string json)
+    {
+        // Arrange
+        string key = "age";
+        string newValue = "35";
+
+        // Act
+        string result = _jsonService.ReplaceValue(json, key, newValue)!;
+
+        // Assert
+        result.Should().BeEmpty();
     }
 }
