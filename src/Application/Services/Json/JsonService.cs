@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using Application.Services.Abstractions;
+﻿using Application.Services.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -74,6 +71,36 @@ public class JsonService : IJsonService
 
         return json;
 
+    }
+
+    public string? GetValueFromKey(string json, string key, Formatting formatting = Formatting.None)
+    {
+        if (string.IsNullOrEmpty(json) || string.IsNullOrEmpty(key))
+        {
+            return null;
+        }
+
+        JObject jsonObject = JObject.Parse(json);
+
+        string[] keys = key.Split('.');
+
+        JToken? currentToken = jsonObject;
+        foreach (var k in keys)
+        {
+            if (currentToken is JObject obj)
+            {
+                if (!obj.TryGetValue(k, out currentToken))
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        return currentToken?.ToString(formatting);
     }
 
     public string? ReplaceValue(string json, string key, string newValue, Formatting formatting = Formatting.Indented)

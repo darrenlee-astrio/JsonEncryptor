@@ -84,7 +84,7 @@ public class AesEncryptionService : EncryptionBase, IAesEncryptionService
             aesAlgorithm.Key = Convert.FromBase64String(key);
             aesAlgorithm.IV = Convert.FromBase64String(iv);
 
-           return EncryptInternal(plainText, aesAlgorithm);
+            return EncryptInternal(plainText, aesAlgorithm);
         }
     }
 

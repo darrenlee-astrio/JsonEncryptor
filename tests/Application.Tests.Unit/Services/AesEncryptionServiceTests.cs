@@ -1,13 +1,6 @@
 ﻿using Application.Common.Extensions;
 using Application.Services.Encryption;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Tests.Unit.Services;
 
@@ -17,7 +10,7 @@ public class AesEncryptionServiceTests
 
     public AesEncryptionServiceTests()
     {
-        _aesEncryptionService = new AesEncryptionService();    
+        _aesEncryptionService = new AesEncryptionService();
     }
 
     [Fact]

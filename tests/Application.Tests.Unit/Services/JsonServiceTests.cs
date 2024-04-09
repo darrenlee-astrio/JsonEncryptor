@@ -107,6 +107,24 @@ public class JsonServiceTests
         result.Should().Be(expected);
     }
 
+    [Theory]
+    [InlineData("{\"name\":\"John\",\"age\":30}", "name", "John")]
+    [InlineData("{\"name\":\"John\",\"age\":30}", "age", "30")]
+    [InlineData("{\"name\":\"John\",\"age\":30}", "city", null)]
+    [InlineData("{\"data\":{\"value\":42}}", "data", "{\"value\":42}")]
+    [InlineData("{\"data\":{\"value\":42}}", "data.value", "42")]
+    [InlineData("{}", "key", null)]
+    [InlineData("", "key", null)]
+    [InlineData(null, "key", null)]
+    public void GetValueFromKey_WhenInputIsValid_ReturnsCorrectValue(string json, string key, string expectedValue)
+    {
+        // Act
+        string? result = _jsonService.GetValueFromKey(json, key);
+
+        // Assert
+        result.Should().Be(expectedValue);
+    }
+
     [Fact]
     public void ReplaceValue_ShouldReturnModifiedJson_WhenKeyExists()
     {
