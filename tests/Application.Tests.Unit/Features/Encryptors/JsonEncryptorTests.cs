@@ -2,10 +2,8 @@
 using Application.Features.Encryptors;
 using Application.Tests.Unit.Constants;
 using FluentAssertions;
-using Newtonsoft.Json.Linq;
 using NSubstitute;
 using System.Security;
-using System.Security.Cryptography;
 
 namespace Application.Tests.Unit.Features.Encryptors;
 
