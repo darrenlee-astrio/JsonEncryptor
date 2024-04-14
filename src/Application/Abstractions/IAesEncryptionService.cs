@@ -1,6 +1,6 @@
 ﻿using System.Security;
 
-namespace Application.Services.Abstractions
+namespace Application.Abstractions
 {
     public interface IAesEncryptionService
     {
