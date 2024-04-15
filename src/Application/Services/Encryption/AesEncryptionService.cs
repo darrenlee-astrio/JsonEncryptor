@@ -8,6 +8,34 @@ namespace Application.Services.Encryption;
 public class AesEncryptionService : EncryptionBase, IAesEncryptionService
 {
     /// <summary>
+    /// Generates a random AES key with the specified key size.
+    /// </summary>
+    /// <param name="keySize">The size of the key in bits. Default is 256 bits.</param>
+    /// <returns>A Base64-encoded string representation of the generated key.</returns>
+    public string GenerateKey(int keySize = 256)
+    {
+        using (var aes = Aes.Create())
+        {
+            aes.KeySize = keySize;
+            aes.GenerateKey();
+            return Convert.ToBase64String(aes.Key);
+        }
+    }
+
+    /// <summary>
+    /// Generates a random AES initialization vector (IV).
+    /// </summary>
+    /// <returns>A Base64-encoded string representation of the generated IV.</returns>
+    public string GenerateIv()
+    {
+        using (var aes = Aes.Create())
+        {
+            aes.GenerateIV();
+            return Convert.ToBase64String(aes.IV);
+        }
+    }
+
+    /// <summary>
     /// Encrypts a plain text using AES encryption with the specified key and key size.
     /// The Initialization Vector (IV) will be generated randomly.
     /// </summary>

@@ -41,7 +41,7 @@ public class JsonEncryptor : IJsonEncryptor
 
         foreach (var key in keysToEncrypt)
         {
-            var value = _jsonService.GetValueFromKey(json, key);
+            var value = _jsonService.GetValueFromKey<string>(json, key);
 
             if (value is null)
             {
@@ -82,7 +82,7 @@ public class JsonEncryptor : IJsonEncryptor
 
         foreach (var key in keysToDecrypt)
         {
-            var value = _jsonService.GetValueFromKey(json, key);
+            var value = _jsonService.GetValueFromKey<string>(json, key);
 
             if (value is null)
             {

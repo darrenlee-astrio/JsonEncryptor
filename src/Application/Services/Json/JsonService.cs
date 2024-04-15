@@ -73,11 +73,11 @@ public class JsonService : IJsonService
 
     }
 
-    public string? GetValueFromKey(string json, string key, Formatting formatting = Formatting.None)
+    public T? GetValueFromKey<T>(string json, string key)
     {
         if (string.IsNullOrEmpty(json) || string.IsNullOrEmpty(key))
         {
-            return null;
+            return default;
         }
 
         JObject jsonObject = JObject.Parse(json);
@@ -91,16 +91,16 @@ public class JsonService : IJsonService
             {
                 if (!obj.TryGetValue(k, out currentToken))
                 {
-                    return null;
+                    return default;
                 }
             }
             else
             {
-                return null;
+                return default;
             }
         }
 
-        return currentToken?.ToString(formatting);
+        return currentToken.Value<T>();
     }
 
     public string? ReplaceValue(string json, string key, string newValue, Formatting formatting = Formatting.Indented)

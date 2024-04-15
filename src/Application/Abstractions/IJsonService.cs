@@ -6,7 +6,7 @@ namespace Application.Abstractions
     {
         bool IsJsonValid(string input);
         string PrettifyJson(string input);
-        string? GetValueFromKey(string json, string key, Formatting formatting = Formatting.None);
+        T? GetValueFromKey<T>(string json, string key);
         string? ReplaceValue(string json, string key, string newValue, Formatting formatting = Formatting.Indented);
     }
 }
