@@ -44,7 +44,7 @@ public class JsonEncryptorTests
         var encryptedValue = "MyAesEncryptedValue";
         var encryptedJson = $"{{\"{keyToEncrypt}\":\"{encryptedValue}\",\"key2\":\"value2\"}}";
         var keysToEncrypt = new List<string> { keyToEncrypt };
-        _jsonService.GetValueFromKey(json, keyToEncrypt).Returns(value);
+        _jsonService.GetValueFromKey<string>(json, keyToEncrypt).Returns(value);
         _aesEncryptionService.Encrypt(value, AesKey, AesKeySize, Iv).Returns(encryptedValue);
         _jsonService.ReplaceValue(json, keyToEncrypt, encryptedValue).Returns(encryptedJson);
 
@@ -115,7 +115,7 @@ public class JsonEncryptorTests
         var decryptedValue = "MyValue";
         var decryptedJson = $"{{\"{keyToDecrypt}\":\"{decryptedValue}\",\"key2\":\"value2\"}}";
         var keysToDecrypt = new List<string> { keyToDecrypt };
-        _jsonService.GetValueFromKey(encryptedJson, keyToDecrypt).Returns(encryptedValue);
+        _jsonService.GetValueFromKey<string>(encryptedJson, keyToDecrypt).Returns(encryptedValue);
         _aesEncryptionService.Decrypt(encryptedValue, AesKey, AesKeySize, Iv).Returns(GetSecureString(decryptedValue));
         _jsonService.ReplaceValue(encryptedJson, keyToDecrypt, decryptedValue).Returns(decryptedJson);
 

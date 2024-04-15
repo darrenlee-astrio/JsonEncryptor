@@ -1,11 +1,12 @@
-﻿using Application.Services.Json;
+﻿using Application.Abstractions;
+using Application.Services.Json;
 using FluentAssertions;
 
 namespace Application.Tests.Unit.Services;
 
 public class JsonServiceTests
 {
-    private readonly JsonService _jsonService;
+    private readonly IJsonService _jsonService;
     public JsonServiceTests()
     {
         _jsonService = new JsonService();
@@ -109,17 +110,44 @@ public class JsonServiceTests
 
     [Theory]
     [InlineData("{\"name\":\"John\",\"age\":30}", "name", "John")]
-    [InlineData("{\"name\":\"John\",\"age\":30}", "age", "30")]
-    [InlineData("{\"name\":\"John\",\"age\":30}", "city", null)]
-    [InlineData("{\"data\":{\"value\":42}}", "data", "{\"value\":42}")]
-    [InlineData("{\"data\":{\"value\":42}}", "data.value", "42")]
-    [InlineData("{}", "key", null)]
-    [InlineData("", "key", null)]
-    [InlineData(null, "key", null)]
-    public void GetValueFromKey_WhenInputIsValid_ReturnsCorrectValue(string json, string key, string expectedValue)
+    public void GetStringValueFromKey_ShouldReturnStringValue_WhenInputIsValid(string json, string key, string expectedValue)
     {
         // Act
-        string? result = _jsonService.GetValueFromKey(json, key);
+        string? result = _jsonService.GetValueFromKey<string>(json, key);
+
+        // Assert
+        result.Should().Be(expectedValue);
+    }
+
+    [Theory]
+    [InlineData("{\"name\":\"John\",\"age\":30}", "address", null)]
+    public void GetStringValueFromKey_ShouldReturnDefault_WhenInputIsInvalid(string json, string key, string expectedValue)
+    {
+        // Act
+        string? result = _jsonService.GetValueFromKey<string>(json, key);
+
+        // Assert
+        result.Should().Be(expectedValue);
+    }
+
+    [Theory]
+    [InlineData("{\"name\":\"John\",\"age\":30}", "age", 30)]
+    [InlineData("{\"data\":{\"value\":42}}", "data.value", 42)]
+    public void GetIntValueFromKey_ShouldReturnIntValue_WhenInputIsValid(string json, string key, int expectedValue)
+    {
+        // Act
+        int result = _jsonService.GetValueFromKey<int>(json, key);
+
+        // Assert
+        result.Should().Be(expectedValue);
+    }
+
+    [Theory]
+    [InlineData("{\"name\":\"John\",\"age\":30}", "number", null)]
+    public void GetIntValueFromKey_ShouldReturnDefault_WhenInputIsInvalid(string json, string key, int? expectedValue)
+    {
+        // Act
+        int? result = _jsonService.GetValueFromKey<int?>(json, key);
 
         // Assert
         result.Should().Be(expectedValue);

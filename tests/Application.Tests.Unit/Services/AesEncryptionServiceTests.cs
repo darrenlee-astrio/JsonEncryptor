@@ -1,4 +1,5 @@
-﻿using Application.Common.Extensions;
+﻿using Application.Abstractions;
+using Application.Common.Extensions;
 using Application.Services.Encryption;
 using FluentAssertions;
 
@@ -6,7 +7,7 @@ namespace Application.Tests.Unit.Services;
 
 public class AesEncryptionServiceTests
 {
-    private readonly AesEncryptionService _aesEncryptionService;
+    private readonly IAesEncryptionService _aesEncryptionService;
 
     public AesEncryptionServiceTests()
     {
@@ -109,5 +110,40 @@ public class AesEncryptionServiceTests
         // Assert
         action.Should().Throw<ArgumentNullException>()
             .And.ParamName.Should().Be(nameof(plainText));
+    }
+
+    [Fact]
+    public void GenerateKey_ShouldReturnValidBase64EncodedKey()
+    {
+        // Arrange
+        const int keySize = 256;
+
+        // Act
+        var key = _aesEncryptionService.GenerateKey(keySize);
+
+        // Assert
+        key.Should().NotBeNullOrEmpty();
+        key.Length.Should().BeGreaterThan(0);
+
+        byte[] decodedKey;
+        Action decodeAction = () => decodedKey = Convert.FromBase64String(key);
+        decodeAction.Should().NotThrow();
+    }
+
+    [Fact]
+    public void GenerateIv_ShouldReturnValidBase64EncodedIv()
+    {
+        // Arrange
+
+        // Act
+        var iv = _aesEncryptionService.GenerateIv();
+
+        // Assert
+        iv.Should().NotBeNullOrEmpty();
+        iv.Length.Should().BeGreaterThan(0);
+
+        byte[] decodedIv;
+        Action decodeAction = () => decodedIv = Convert.FromBase64String(iv);
+        decodeAction.Should().NotThrow();
     }
 }
