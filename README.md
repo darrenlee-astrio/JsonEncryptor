@@ -23,7 +23,7 @@ An easy-to-use tool for encrypting specific elements within a JSON file using AE
 2. Navigate to the project directory:
 
     ```bash
-    cd your-repository
+    cd JsonEncryptor
     ```
 
 3. Build the project:
