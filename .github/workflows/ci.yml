@@ -33,7 +33,7 @@ jobs:
         dotnet test tests/Application.Tests.Unit/Application.Tests.Unit.csproj --configuration Release --no-build
 
     - name: Publish
-      run: dotnet publish src/WinForm/WinForm.csproj
+      run: dotnet publish src/WinForm/WinForm.csproj -c Release -o WinForm
 
     - name: Archive artifact
       uses: actions/upload-artifact@v4
