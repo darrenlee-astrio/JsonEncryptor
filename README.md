@@ -42,11 +42,11 @@ An easy-to-use tool for encrypting specific elements within a JSON file using AE
 
 1. Go to [Workflow](https://github.com/darrenleeyx/JsonEncryptor/actions/workflows/ci.yml) and click on the latest workflow run.
 
-2. Navigate to the "Artifacts" section and download the artifacts named "WinForm".
+2. Navigate to the "Artifacts" section and download the artifacts named "JsonEncryptor.WinForm".
 
 3. Extract the downloaded artifacts.
 
-4. Run the WinForm.exe.
+4. Run JsonEncryptor.WinForm.exe.
 
 ## License
 This project is licensed under the [MIT License](LICENSE).

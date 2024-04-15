@@ -30,13 +30,13 @@ jobs:
 
     - name: Test
       run: |
-        dotnet test tests/Application.Tests.Unit/Application.Tests.Unit.csproj --configuration Release --no-build
+        dotnet test tests/JsonEncryptor.Application.Tests.Unit/JsonEncryptor.Application.Tests.Unit.csproj --configuration Release --no-build
 
     - name: Publish
-      run: dotnet publish src/WinForm/WinForm.csproj -c Release -o WinForm
+      run: dotnet publish src/JsonEncryptor.WinForm/JsonEncryptor.WinForm.csproj -c Release -o app.publish
 
     - name: Archive artifact
       uses: actions/upload-artifact@v4
       with:
-        name: WinForm
-        path: WinForm
+        name: JsonEncryptor.WinForm
+        path: app.publish

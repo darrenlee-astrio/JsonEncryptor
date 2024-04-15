@@ -7,11 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2605830B-B14
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{56A2E966-3FE9-4C08-8DA6-2A2EEF6A3C0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Application\Application.csproj", "{5A568BCB-CF13-4A27-BCAC-5F71A7711853}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonEncryptor.Application", "src\JsonEncryptor.Application\JsonEncryptor.Application.csproj", "{5A568BCB-CF13-4A27-BCAC-5F71A7711853}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Tests.Unit", "tests\Application.Tests.Unit\Application.Tests.Unit.csproj", "{0AFEECA3-5541-47D5-92F4-DF12AAE44500}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonEncryptor.Application.Tests.Unit", "tests\JsonEncryptor.Application.Tests.Unit\JsonEncryptor.Application.Tests.Unit.csproj", "{0AFEECA3-5541-47D5-92F4-DF12AAE44500}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinForm", "src\WinForm\WinForm.csproj", "{E78A6D31-BACE-4311-A0D2-556B7571507E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonEncryptor.WinForm", "src\JsonEncryptor.WinForm\JsonEncryptor.WinForm.csproj", "{E78A6D31-BACE-4311-A0D2-556B7571507E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
