@@ -17,7 +17,7 @@ An easy-to-use tool for encrypting specific elements within a JSON file using AE
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-username/your-repository.git
+    git clone https://github.com/darrenleeyx/JsonEncryptor.git
     ```
 
 2. Navigate to the project directory:
