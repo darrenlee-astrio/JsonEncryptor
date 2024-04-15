@@ -40,17 +40,13 @@ An easy-to-use tool for encrypting specific elements within a JSON file using AE
 
 ### Option 2: Downloading Artifacts from Workflows
 
-1. Go to the "Actions" tab on GitHub.
+1. Go to [Workflow](https://github.com/darrenleeyx/JsonEncryptor/actions/workflows/ci.yml) and click on the latest workflow run.
 
-2. Select the workflow named "Build, Test, and Publish".
+2. Navigate to the "Artifacts" section and download the artifacts named "WinForm".
 
-3. Click on the latest workflow run.
+3. Extract the downloaded artifacts.
 
-4. Navigate to the "Artifacts" section and download the artifacts named "WinForm".
-
-5. Extract the downloaded artifacts.
-
-6. Run the application executable.
+4. Run the application executable.
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
