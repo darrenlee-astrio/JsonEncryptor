@@ -35,7 +35,7 @@ An easy-to-use tool for encrypting specific elements within a JSON file using AE
 4. Run the application:
 
     ```bash
-    dotnet run --project YourProjectName/YourProjectName.csproj
+    dotnet run
     ```
 
 ### Option 2: Downloading Artifacts from Workflows
@@ -46,7 +46,7 @@ An easy-to-use tool for encrypting specific elements within a JSON file using AE
 
 3. Click on the latest workflow run.
 
-4. Navigate to the "Artifacts" section and download the artifacts named "app-publish".
+4. Navigate to the "Artifacts" section and download the artifacts named "WinForm".
 
 5. Extract the downloaded artifacts.
 
