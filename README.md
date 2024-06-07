@@ -46,7 +46,7 @@ An easy-to-use tool for encrypting specific elements within a JSON file using AE
 
 3. Extract the downloaded artifacts.
 
-4. Run JsonEncryptor.WinForm.exe.
+4. Run JsonEncryptor.WinForm.exe. You do not need to install .NET desktop runtime as it is self-contained.
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
