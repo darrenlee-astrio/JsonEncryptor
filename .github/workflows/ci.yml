@@ -33,7 +33,7 @@ jobs:
         dotnet test tests/JsonEncryptor.Application.Tests.Unit/JsonEncryptor.Application.Tests.Unit.csproj --configuration Release --no-build
 
     - name: Publish
-      run: dotnet publish src/JsonEncryptor.WinForm/JsonEncryptor.WinForm.csproj -c Release -o app.publish
+      run: dotnet publish src/JsonEncryptor.WinForm/JsonEncryptor.WinForm.csproj -c Release -r win-x64 --self-contained -o app.publish
 
     - name: Archive artifact
       uses: actions/upload-artifact@v4
