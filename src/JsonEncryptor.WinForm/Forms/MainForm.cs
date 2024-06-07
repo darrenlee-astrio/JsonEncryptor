@@ -27,23 +27,10 @@ public partial class MainForm : Form
     #region Form Events
     private void MainForm_Shown(object sender, EventArgs e)
     {
-        if (!File.Exists(Paths.UiStateFilePath))
+        if (File.Exists(Paths.UiStateFilePath))
         {
-            return;
+            LoadUiState();
         }
-
-        var uiState = JsonConvert.DeserializeObject<UIState>(File.ReadAllText(Paths.UiStateFilePath));
-
-        if (uiState == null)
-        {
-            return;
-        }
-
-        textBoxFilePath.UpdateTextIfNotNullOrEmpty(uiState.FilePath);
-        textBoxJsonKeys.UpdateTextIfNotNullOrEmpty(uiState.JsonKeys);
-        textBoxAesKey.UpdateTextIfNotNullOrEmpty(uiState.AesKey);
-        textBoxAesIv.UpdateTextIfNotNullOrEmpty(uiState.AesIv);
-        groupBoxControls.Focus();
     }
 
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -208,6 +195,22 @@ public partial class MainForm : Form
             _logger.Error(ex.Message, ex);
         }
 
+    }
+
+    private void LoadUiState()
+    {
+        var uiState = JsonConvert.DeserializeObject<UIState>(File.ReadAllText(Paths.UiStateFilePath));
+
+        if (uiState == null)
+        {
+            return;
+        }
+
+        textBoxFilePath.UpdateTextIfNotNullOrEmpty(uiState.FilePath);
+        textBoxJsonKeys.UpdateTextIfNotNullOrEmpty(uiState.JsonKeys);
+        textBoxAesKey.UpdateTextIfNotNullOrEmpty(uiState.AesKey);
+        textBoxAesIv.UpdateTextIfNotNullOrEmpty(uiState.AesIv);
+        groupBoxControls.Focus();
     }
 
     #endregion
