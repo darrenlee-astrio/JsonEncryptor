@@ -66,6 +66,19 @@ public partial class MainForm : Form
 
     private void buttonEncrypt_Click(object sender, EventArgs e)
     {
+        textBoxBefore.Clear();
+        textBoxAfter.Clear();
+
+        textBoxBefore.Text = File.ReadAllText(textBoxFilePath.Text);
+
+        if (MessageBox.Show(
+                text: "Are you sure you want to encrypt the file? The changes will be saved to the file directly.",
+                caption: "Confirmation",
+                MessageBoxButtons.YesNo) == DialogResult.No)
+        {
+            return;
+        }
+
         var output = ProcessFile(textBoxFilePath.Text, textBoxJsonKeys.Text, textBoxAesKey.Text, textBoxAesIv.Text, UserAction.Encrypt, out string input);
 
         if (string.IsNullOrEmpty(output))
@@ -79,6 +92,19 @@ public partial class MainForm : Form
 
     private void buttonDecrypt_Click(object sender, EventArgs e)
     {
+        textBoxBefore.Clear();
+        textBoxAfter.Clear();
+
+        textBoxBefore.Text = File.ReadAllText(textBoxFilePath.Text);
+
+        if (MessageBox.Show(
+                text: "Are you sure you want to decrypt the file? The changes will be saved to the file directly.",
+                caption: "Confirmation",
+                MessageBoxButtons.YesNo) == DialogResult.No)
+        {
+            return;
+        }
+
         var output = ProcessFile(textBoxFilePath.Text, textBoxJsonKeys.Text, textBoxAesKey.Text, textBoxAesIv.Text, UserAction.Decrypt, out string input);
 
         if (string.IsNullOrEmpty(output))
@@ -211,6 +237,19 @@ public partial class MainForm : Form
         textBoxAesKey.UpdateTextIfNotNullOrEmpty(uiState.AesKey);
         textBoxAesIv.UpdateTextIfNotNullOrEmpty(uiState.AesIv);
         groupBoxControls.Focus();
+
+        if (string.IsNullOrEmpty(textBoxFilePath.Text))
+        {
+            return;
+        }
+
+        if (!File.Exists(textBoxFilePath.Text))
+        {
+            _logger.Error($"File does not exist: {textBoxFilePath.Text}");
+            return;
+        }
+
+        textBoxBefore.Text = File.ReadAllText(textBoxFilePath.Text);
     }
 
     #endregion
