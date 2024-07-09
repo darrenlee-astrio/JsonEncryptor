@@ -35,7 +35,7 @@ An easy-to-use tool for encrypting specific elements within a JSON file using AE
 4. Run the application:
 
     ```bash
-    dotnet run
+    dotnet run --project src/JsonEncryptor.WinForm/JsonEncryptor.WinForm.csproj
     ```
 
 ### Option 2: Downloading Artifacts from Workflows
