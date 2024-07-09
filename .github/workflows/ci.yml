@@ -5,38 +5,38 @@ on:
   #push:
   #  branches:
   #    - master
-  #pull_request:
-  #  branches:
-  #    - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
 
-    - name: Test
-      run: |
-        dotnet test tests/JsonEncryptor.Application.Tests.Unit/JsonEncryptor.Application.Tests.Unit.csproj --configuration Release --no-build
+      - name: Test
+        run: |
+          dotnet test tests/JsonEncryptor.Application.Tests.Unit/JsonEncryptor.Application.Tests.Unit.csproj --configuration Release --no-build
 
-    - name: Publish
-      run: dotnet publish src/JsonEncryptor.WinForm/JsonEncryptor.WinForm.csproj -c Release -r win-x64 --self-contained -o app.publish
+      - name: Publish
+        run: dotnet publish src/JsonEncryptor.WinForm/JsonEncryptor.WinForm.csproj -c Release -r win-x64 --self-contained -o app.publish
 
-    - name: Archive artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: JsonEncryptor.WinForm
-        path: app.publish
+      - name: Archive artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JsonEncryptor.WinForm
+          path: app.publish
