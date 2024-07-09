@@ -103,7 +103,7 @@ public class JsonService : IJsonService
         return currentToken.Value<T>();
     }
 
-    public string? ReplaceValue(string json, string key, string newValue, Formatting formatting = Formatting.Indented)
+    public string? ReplaceValue(string json, string key, string newValue, Formatting formatting = Formatting.None)
     {
         if (string.IsNullOrEmpty(json))
         {
