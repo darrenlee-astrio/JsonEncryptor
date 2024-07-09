@@ -12,15 +12,18 @@ public partial class MainForm : Form
     private const int AesKeySize = 256;
     private readonly ILogger _logger = Log.ForContext<MainForm>();
     private readonly IJsonEncryption _jsonEncryptor;
+    private readonly IJsonService _jsonService;
     private readonly IAesEncryptionService _aesEncryptionService;
 
     public MainForm(
         IAesEncryptionService aesEncryptionService,
-        IJsonEncryption jsonEncryptor)
+        IJsonEncryption jsonEncryptor,
+        IJsonService jsonService)
     {
         InitializeComponent();
 
         _jsonEncryptor = jsonEncryptor;
+        _jsonService = jsonService;
         _aesEncryptionService = aesEncryptionService;
     }
 
@@ -50,7 +53,7 @@ public partial class MainForm : Form
         {
             textBoxFilePath.UpdateText(openFileDialog.FileName);
 
-            textBoxBefore.Text = File.ReadAllText(openFileDialog.FileName);
+            textBoxBefore.Text = _jsonService.PrettifyJson(File.ReadAllText(openFileDialog.FileName));
         }
     }
 
@@ -69,7 +72,7 @@ public partial class MainForm : Form
         textBoxBefore.Clear();
         textBoxAfter.Clear();
 
-        textBoxBefore.Text = File.ReadAllText(textBoxFilePath.Text);
+        textBoxBefore.Text = _jsonService.PrettifyJson(File.ReadAllText(textBoxFilePath.Text));
 
         if (MessageBox.Show(
                 text: "Are you sure you want to encrypt the file? The changes will be saved to the file directly.",
@@ -79,14 +82,13 @@ public partial class MainForm : Form
             return;
         }
 
-        var output = ProcessFile(textBoxFilePath.Text, textBoxJsonKeys.Text, textBoxAesKey.Text, textBoxAesIv.Text, UserAction.Encrypt, out string input);
+        var output = ProcessFile(textBoxFilePath.Text, textBoxJsonKeys.Text, textBoxAesKey.Text, textBoxAesIv.Text, UserAction.Encrypt);
 
         if (string.IsNullOrEmpty(output))
         {
             return;
         }
 
-        textBoxBefore.Text = input;
         textBoxAfter.Text = output;
     }
 
@@ -95,7 +97,7 @@ public partial class MainForm : Form
         textBoxBefore.Clear();
         textBoxAfter.Clear();
 
-        textBoxBefore.Text = File.ReadAllText(textBoxFilePath.Text);
+        textBoxBefore.Text = _jsonService.PrettifyJson(File.ReadAllText(textBoxFilePath.Text));
 
         if (MessageBox.Show(
                 text: "Are you sure you want to decrypt the file? The changes will be saved to the file directly.",
@@ -105,14 +107,13 @@ public partial class MainForm : Form
             return;
         }
 
-        var output = ProcessFile(textBoxFilePath.Text, textBoxJsonKeys.Text, textBoxAesKey.Text, textBoxAesIv.Text, UserAction.Decrypt, out string input);
+        var output = ProcessFile(textBoxFilePath.Text, textBoxJsonKeys.Text, textBoxAesKey.Text, textBoxAesIv.Text, UserAction.Decrypt);
 
         if (string.IsNullOrEmpty(output))
         {
             return;
         }
 
-        textBoxBefore.Text = input;
         textBoxAfter.Text = output;
     }
     #endregion
@@ -124,14 +125,24 @@ public partial class MainForm : Form
     #endregion
 
     #region Private Methods
-    private string ProcessFile(string filePath, string jsonKeys, string aesKey, string aesIv, UserAction action, out string input)
+    private string ProcessFile(string filePath, string jsonKeys, string aesKey, string aesIv, UserAction action)
     {
-        input = string.Empty;
+        string input = string.Empty;
 
         if (string.IsNullOrEmpty(filePath))
         {
             _logger.Warning("Please specify a path to a json file.");
             return string.Empty;
+        }
+        else
+        {
+            input = _jsonService.PrettifyJson(File.ReadAllText(filePath));
+
+            if (string.IsNullOrEmpty(input))
+            {
+                _logger.Warning("Unable to encrypt and/or decrypt a empty file.");
+                return string.Empty;
+            }
         }
 
         if (!File.Exists(filePath))
@@ -158,14 +169,6 @@ public partial class MainForm : Form
             return string.Empty;
         }
 
-        input = File.ReadAllText(filePath);
-
-        if (string.IsNullOrEmpty(input))
-        {
-            _logger.Warning("Unable to encrypt and/or decrypt a empty file.");
-            return string.Empty;
-        }
-
         List<string> jsonKeysList = jsonKeys.Split(';').ToList();
 
         if (jsonKeysList.Count <= 0)
@@ -182,6 +185,8 @@ public partial class MainForm : Form
                 UserAction.Decrypt => _jsonEncryptor.Decrypt(input, jsonKeysList, aesKey, AesKeySize, aesIv),
                 _ => throw new InvalidOperationException("Invalid user action")
             };
+
+            output = _jsonService.PrettifyJson(output);
 
             File.WriteAllText(filePath, output);
 
@@ -251,6 +256,5 @@ public partial class MainForm : Form
 
         textBoxBefore.Text = File.ReadAllText(textBoxFilePath.Text);
     }
-
     #endregion
 }
