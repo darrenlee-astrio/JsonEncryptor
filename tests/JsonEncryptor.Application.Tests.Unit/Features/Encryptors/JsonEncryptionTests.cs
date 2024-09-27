@@ -106,6 +106,27 @@ public class JsonEncryptionTests
     }
 
     [Fact]
+    public void Encrypt_ShouldThrowException_WhenKeyNotFound()
+    {
+        // Arrange
+        string json = "{\"name\":\"John Doe\"}";
+        List<string> keysToEncrypt = new List<string> { "missingKey" };
+        string aesKey = "myAesKey";
+        int aesKeySize = 256;
+        string iv = "myInitializationVector";
+
+        var jsonService = Substitute.For<IJsonService>();
+        jsonService.GetValueFromKey<string>(json, "missingKey").Returns((string?)null);
+        var jsonEncryptor = new JsonEncryption(jsonService, _aesEncryptionService);
+
+        // Act
+        Action act = () => jsonEncryptor.Encrypt(json, keysToEncrypt, aesKey, aesKeySize, iv);
+
+        // Assert
+        act.Should().Throw<KeyNotFoundException>();
+    }
+
+    [Fact]
     public void Decrypt_ShouldReturnDecryptedJson_WhenInputIsValid()
     {
         // Arrange

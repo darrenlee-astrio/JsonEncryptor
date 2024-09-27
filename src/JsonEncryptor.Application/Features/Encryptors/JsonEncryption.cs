@@ -45,7 +45,7 @@ public class JsonEncryption : IJsonEncryption
 
             if (value is null)
             {
-                continue;
+                throw new KeyNotFoundException($"'{key}' was not found. Please ensure that the key is entered correctly. Use '.' to go one level deeper. For arrays, ensure that index is given.");
             }
 
             var encryptedValue = _aesEncryptionService.Encrypt(value, aesKey, aesKeySize, iv);
