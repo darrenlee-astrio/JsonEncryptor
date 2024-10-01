@@ -198,4 +198,100 @@ public class JsonServiceTests
         // Assert
         result.Should().BeEmpty();
     }
+
+    [Theory]
+    [InlineData("{\"a\":{\"b\":{\"c\":\"value\"}}}", "a.b.c", "value")]
+    [InlineData("{\"a\":{\"b\":[{\"c\":\"value1\"},{\"c\":\"value2\"}]}}", "a.b[1].c", "value2")]
+    public void GetValueFromKey_ValidKey_ShouldReturnValue(string json, string key, string expected)
+    {
+        // Act
+        var result = _jsonService.GetValueFromKey<string>(json, key);
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
+    [Fact]
+    public void GetValueFromKey_InvalidKey_ShouldReturnDefault()
+    {
+        // Arrange
+        var json = "{\"a\":{\"b\":{\"c\":\"value\"}}}";
+        var key = "a.b.d";
+
+        // Act
+        var result = _jsonService.GetValueFromKey<string>(json, key);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void GetValueFromKey_EmptyJson_ShouldReturnDefault()
+    {
+        // Arrange
+        var json = "";
+        var key = "a.b.c";
+
+        // Act
+        var result = _jsonService.GetValueFromKey<string>(json, key);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void GetValueFromKey_EmptyKey_ShouldReturnDefault()
+    {
+        // Arrange
+        var json = "{\"a\":{\"b\":{\"c\":\"value\"}}}";
+        var key = "";
+
+        // Act
+        var result = _jsonService.GetValueFromKey<string>(json, key);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void GetValueFromKey_NonExistentArrayIndex_ShouldReturnDefault()
+    {
+        // Arrange
+        var json = "{\"a\":{\"b\":[{\"c\":\"value1\"}]}}";
+        var key = "a.b[2].c"; // Index out of bounds
+
+        // Act
+        var result = _jsonService.GetValueFromKey<string>(json, key);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void GetValueFromKey_InvalidArrayKeyFormat_ShouldReturnDefault()
+    {
+        // Arrange
+        var json = "{\"a\":{\"b\":[{\"c\":\"value1\"}]}}";
+        var key = "a.b[invalid].c"; // Invalid array index format
+
+        // Act
+        var result = _jsonService.GetValueFromKey<string>(json, key);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void GetValueFromKey_ArrayKey_ShouldReturnValue()
+    {
+        // Arrange
+        var json = "{\"a\":{\"b\":[{\"c\":\"value1\"},{\"c\":\"value2\"}]}}";
+        var key = "a.b[0].c"; // Valid array access
+
+        // Act
+        var result = _jsonService.GetValueFromKey<string>(json, key);
+
+        // Assert
+        result.Should().Be("value1");
+    }
 }

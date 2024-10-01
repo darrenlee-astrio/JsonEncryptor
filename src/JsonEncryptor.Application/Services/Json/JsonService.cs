@@ -81,27 +81,87 @@ public class JsonService : IJsonService
         }
 
         JObject jsonObject = JObject.Parse(json);
-
         string[] keys = key.Split('.');
 
         JToken? currentToken = jsonObject;
         foreach (var k in keys)
         {
-            if (currentToken is JObject obj)
+            if (k.Contains("[") && k.Contains("]"))
             {
-                if (!obj.TryGetValue(k, out currentToken))
+                var arrayName = k.Substring(0, k.IndexOf("["));
+                var indexPart = k.Substring(k.IndexOf("[")).Trim('[', ']');
+                if (int.TryParse(indexPart, out int index))
+                {
+                    if (currentToken is JObject obj && obj.TryGetValue(arrayName, out JToken? arrayToken))
+                    {
+                        if (arrayToken is JArray array && index < array.Count)
+                        {
+                            currentToken = array[index];
+                        }
+                        else
+                        {
+                            return default;
+                        }
+                    }
+                    else
+                    {
+                        return default;
+                    }
+                }
+                else
                 {
                     return default;
                 }
             }
             else
             {
-                return default;
+                if (currentToken is JObject obj)
+                {
+                    if (!obj.TryGetValue(k, out currentToken))
+                    {
+                        return default;
+                    }
+                }
+                else
+                {
+                    return default;
+                }
             }
         }
 
         return currentToken.Value<T>();
     }
+
+
+    //public T? GetValueFromKey<T>(string json, string key)
+    //{
+    //    if (string.IsNullOrEmpty(json) || string.IsNullOrEmpty(key))
+    //    {
+    //        return default;
+    //    }
+
+    //    JObject jsonObject = JObject.Parse(json);
+
+    //    string[] keys = key.Split('.');
+
+    //    JToken? currentToken = jsonObject;
+    //    foreach (var k in keys)
+    //    {
+    //        if (currentToken is JObject obj)
+    //        {
+    //            if (!obj.TryGetValue(k, out currentToken))
+    //            {
+    //                return default;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            return default;
+    //        }
+    //    }
+
+    //    return currentToken.Value<T>();
+    //}
 
     public string? ReplaceValue(string json, string key, string newValue, Formatting formatting = Formatting.None)
     {
